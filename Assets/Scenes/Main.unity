@@ -398,7 +398,7 @@ Transform:
   m_GameObject: {fileID: 794602298}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -417,14 +417,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TargetPosition: {x: 0, y: 0, z: 0}
   DeltaPosition: {x: 0, y: 0, z: 0}
-  MaxDistanceToTargetPosition: 5
+  MaxDistanceToTargetPosition: 10
   DeltaDistance: 0
-  PositionSnappingDistance: 1.5
+  PositionSnappingDistance: 2
   DeltaRotation: {x: 0, y: 0, z: 0, w: 0}
   DeltaLength: 0
-  LengthMin: 0.35
-  LengthTarget: 1
-  LengthMax: 5
+  LengthMin: 0.5
+  LengthTarget: 5
+  LengthMax: 15
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

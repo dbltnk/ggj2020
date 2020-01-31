@@ -38,7 +38,7 @@ public class Randomize : MonoBehaviour
         if (sY <= LengthTarget * 1.5f && sY >= LengthTarget * 0.75f) sY = LengthTarget;
         transform.localScale = new Vector3(transform.localScale.x, sY, transform.localScale.z);
         DeltaLength = transform.localScale.y;
-        audioSource.pitch = DeltaLength;
+        audioSource.pitch = Remap(DeltaLength, 0.5f, 15f, 0.25f, 3f);
         // Position and Distortion
         float pX = Mathf.Clamp(transform.position.x, -MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
         float pY = Mathf.Clamp(transform.position.y, -MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
@@ -46,7 +46,7 @@ public class Randomize : MonoBehaviour
         transform.position = new Vector3(pX, pY, pZ);
         DeltaDistance = Vector3.Distance(transform.position, TargetPosition);
         if (DeltaDistance <= PositionSnappingDistance) transform.position = TargetPosition;
-        float distort = Remap(DeltaDistance, 0f, 8.66f, 0f, 1f);
+        float distort = Remap(DeltaDistance, 0f, 17.32f, 0f, 2f);
         audioSource.outputAudioMixerGroup.audioMixer.SetFloat("Distortion", distort);
     }
 
