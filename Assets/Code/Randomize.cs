@@ -15,6 +15,7 @@ public class Randomize : MonoBehaviour
     public float LengthTarget = 1f;
     public float LengthMax = 3f;
     private AudioSource audioSource;
+    public string EffectName = "DistortionBeat";
 
     void Start ()
     {
@@ -47,7 +48,7 @@ public class Randomize : MonoBehaviour
         DeltaDistance = Vector3.Distance(transform.position, TargetPosition);
         if (DeltaDistance <= PositionSnappingDistance) transform.position = TargetPosition;
         float distort = Remap(DeltaDistance, 0f, 17.32f, 0f, 2f);
-        audioSource.outputAudioMixerGroup.audioMixer.SetFloat("Distortion", distort);
+        audioSource.outputAudioMixerGroup.audioMixer.SetFloat(EffectName, distort);
     }
 
     float Remap (float value, float from1, float to1, float from2, float to2) {
