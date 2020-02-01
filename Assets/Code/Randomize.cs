@@ -13,38 +13,58 @@ public class Randomize : MonoBehaviour
     public Quaternion DeltaRotation;
     public float DeltaLength;
     public float LengthMin;
+    public float LengthSnapStart;
     public float LengthTarget;
+    public float LengthSnapEnd;
     public float LengthMax;
     private AudioSource audioSource;
     public string PositionEffectName = "DistortionBeat";
     public string RotationEffectName = "CutoffBeat";
     public float StartRotationZ;
     public float DeltaToStartRotationZ;
+    public float RotationSnap = 30f;
 
     void Start ()
     {
         audioSource = GetComponent<AudioSource>();
         // Length and pitch
-        DeltaLength = Random.Range(LengthMin, LengthMax);
+        if (Random.Range(0f, 1f) >= 0.5f) {
+            DeltaLength = Random.Range(LengthMin, LengthSnapStart);
+        }
+        else {
+            DeltaLength = Random.Range(LengthSnapEnd, LengthMax);
+        }
+
         transform.localScale = new Vector3(transform.localScale.x, DeltaLength, transform.localScale.z);
         // Position and Distortion
         TargetPosition = transform.position;
-        float x = Random.Range(-MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
-        float y = Random.Range(-MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
-        float z = Random.Range(-MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
-        DeltaPosition = new Vector3(x, y, z);
-        transform.position += DeltaPosition;
+        DeltaDistance = Vector3.Distance(transform.position, TargetPosition);
+        while (DeltaDistance <= PositionSnappingDistance) {
+            float x = Random.Range(-MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
+            float y = Random.Range(-MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
+            float z = Random.Range(-MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
+            DeltaPosition = new Vector3(x, y, z);
+            transform.position += DeltaPosition;
+            DeltaDistance = Vector3.Distance(transform.position, TargetPosition);
+        }
+
         // Rotation and Cutoff
         StartRotationZ = transform.rotation.eulerAngles.z;
-        float r = Random.Range(0f, 360f);
-        transform.rotation = Quaternion.Euler(0f, 0f, r);
+        DeltaToStartRotationZ = StartRotationZ - transform.rotation.eulerAngles.z;
+        float deltaAbs = Mathf.Abs(DeltaToStartRotationZ);
+        while (deltaAbs <= RotationSnap) {
+            float r = Random.Range(0f, 360f);
+            transform.rotation = Quaternion.Euler(0f, 0f, r);
+            DeltaToStartRotationZ = StartRotationZ - transform.rotation.eulerAngles.z;
+            deltaAbs = Mathf.Abs(DeltaToStartRotationZ);
+        }
     }
 
     void Update()
     {
         // Length and pitch
         float sY = Mathf.Clamp(transform.localScale.y, LengthMin, LengthMax);
-        if (sY <= LengthTarget * 1.5f && sY >= LengthTarget * 0.75f) sY = LengthTarget;
+        if (sY <= LengthSnapEnd && sY >= LengthSnapStart) sY = LengthTarget;
         transform.localScale = new Vector3(transform.localScale.x, sY, transform.localScale.z);
         DeltaLength = transform.localScale.y;
         if (DeltaLength == LengthTarget) {
@@ -67,7 +87,7 @@ public class Randomize : MonoBehaviour
         // Rotation and Cutoff
         DeltaToStartRotationZ = StartRotationZ - transform.rotation.eulerAngles.z;
         float deltaAbs = Mathf.Abs(DeltaToStartRotationZ);
-        if (deltaAbs <=30f) transform.rotation = Quaternion.Euler(0f, 0f, StartRotationZ);
+        if (deltaAbs <= RotationSnap) transform.rotation = Quaternion.Euler(0f, 0f, StartRotationZ);
         float cutoff = Remap(deltaAbs, 0f, 360f, 22000f, 0f);
         audioSource.outputAudioMixerGroup.audioMixer.SetFloat(RotationEffectName, cutoff);
     }

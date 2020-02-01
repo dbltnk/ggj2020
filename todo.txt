@@ -1,1 +1,3 @@
-- do not spawn too close to goal
+- get VR visuals working
+- manipulation in VR
+- particle effects
