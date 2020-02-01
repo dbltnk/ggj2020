@@ -425,7 +425,8 @@ MonoBehaviour:
   LengthMin: 0.1
   LengthTarget: 3
   LengthMax: 9
-  EffectName: DistortionBeat
+  PositionEffectName: DistortionBeat
+  RotationEffectName: CutoffBeat
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,7 +710,8 @@ MonoBehaviour:
   LengthMin: 0.1
   LengthTarget: 3
   LengthMax: 9
-  EffectName: DistortionBass
+  PositionEffectName: DistortionBass
+  RotationEffectName: CutoffBass
 --- !u!4 &2132695702
 Transform:
   m_ObjectHideFlags: 0

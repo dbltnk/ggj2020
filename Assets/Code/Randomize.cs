@@ -16,7 +16,10 @@ public class Randomize : MonoBehaviour
     public float LengthTarget;
     public float LengthMax;
     private AudioSource audioSource;
-    public string EffectName = "DistortionBeat";
+    public string PositionEffectName = "DistortionBeat";
+    public string RotationEffectName = "CutoffBeat";
+    public float StartRotationZ;
+    public float DeltaToStartRotationZ;
 
     void Start ()
     {
@@ -31,6 +34,10 @@ public class Randomize : MonoBehaviour
         float z = Random.Range(-MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
         DeltaPosition = new Vector3(x, y, z);
         transform.position += DeltaPosition;
+        // Rotation and Cutoff
+        StartRotationZ = transform.rotation.eulerAngles.z;
+        float r = Random.Range(0f, 360f);
+        transform.rotation = Quaternion.Euler(0f, 0f, r);
     }
 
     void Update()
@@ -55,7 +62,14 @@ public class Randomize : MonoBehaviour
         DeltaDistance = Vector3.Distance(transform.position, TargetPosition);
         if (DeltaDistance <= PositionSnappingDistance) transform.position = TargetPosition;
         float distort = Remap(DeltaDistance, 0f, 17.32f, 0f, 2f);
-        audioSource.outputAudioMixerGroup.audioMixer.SetFloat(EffectName, distort);
+        audioSource.outputAudioMixerGroup.audioMixer.SetFloat(PositionEffectName, distort);
+
+        // Rotation and Cutoff
+        DeltaToStartRotationZ = StartRotationZ - transform.rotation.eulerAngles.z;
+        float deltaAbs = Mathf.Abs(DeltaToStartRotationZ);
+        if (deltaAbs <=30f) transform.rotation = Quaternion.Euler(0f, 0f, StartRotationZ);
+        float cutoff = Remap(deltaAbs, 0f, 360f, 22000f, 0f);
+        audioSource.outputAudioMixerGroup.audioMixer.SetFloat(RotationEffectName, cutoff);
     }
 
     float Remap (float value, float from1, float to1, float from2, float to2) {
