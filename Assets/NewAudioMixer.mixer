@@ -131,7 +131,7 @@ AudioMixerController:
   - guid: ada2dec5d4f55ba46916b87ab652dcf4
     name: DistortionGuitar
   - guid: eac9ce5c786a0b54292588743e6d8581
-    name: CutoffGuita
+    name: CutoffGuitar
   m_AudioMixerGroupViews:
   - guids:
     - c02251e9577382a4ebe489778eea5c64
