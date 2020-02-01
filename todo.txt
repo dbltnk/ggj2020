@@ -1,0 +1,1 @@
+- do not spawn too close to goal

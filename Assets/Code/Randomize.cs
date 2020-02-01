@@ -1,19 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Randomize : MonoBehaviour
 {
     public Vector3 TargetPosition;
     public Vector3 DeltaPosition;
-    public float MaxDistanceToTargetPosition = 5f;
+    public float MaxDistanceToTargetPosition;
     public float DeltaDistance;
-    public float PositionSnappingDistance = 1.5f;
+    public float PositionSnappingDistance;
     public Quaternion DeltaRotation;
     public float DeltaLength;
-    public float LengthMin = 0.5f;
-    public float LengthTarget = 1f;
-    public float LengthMax = 3f;
+    public float LengthMin;
+    public float LengthTarget;
+    public float LengthMax;
     private AudioSource audioSource;
     public string EffectName = "DistortionBeat";
 
@@ -39,7 +40,13 @@ public class Randomize : MonoBehaviour
         if (sY <= LengthTarget * 1.5f && sY >= LengthTarget * 0.75f) sY = LengthTarget;
         transform.localScale = new Vector3(transform.localScale.x, sY, transform.localScale.z);
         DeltaLength = transform.localScale.y;
-        audioSource.pitch = Remap(DeltaLength, 0.5f, 15f, 0.25f, 3f);
+        if (DeltaLength == LengthTarget) {
+            SyncAudioSources();
+            audioSource.pitch = 1f;
+        } else {
+            audioSource.pitch = DeltaLength / 3f;
+        }
+
         // Position and Distortion
         float pX = Mathf.Clamp(transform.position.x, -MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
         float pY = Mathf.Clamp(transform.position.y, -MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
@@ -53,6 +60,21 @@ public class Randomize : MonoBehaviour
 
     float Remap (float value, float from1, float to1, float from2, float to2) {
         return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+    }
+
+    void SyncAudioSources() {
+        List<AudioSource> audiosources = new List<AudioSource>();
+        audiosources = FindObjectsOfType<AudioSource>().ToList();
+        int lastSample = 99999999;
+        foreach (AudioSource a in audiosources) {
+            if (lastSample == 99999999) {
+                lastSample = a.timeSamples;
+                a.timeSamples = 0;
+            }
+            if (a.timeSamples != lastSample) {
+                a.timeSamples = lastSample;
+            }
+        }
     }
 
 }

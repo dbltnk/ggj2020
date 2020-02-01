@@ -246,7 +246,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 47bf1e47df208414ba8f93a5c8a2350f, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
-  m_Pitch: 0.25
+  m_Pitch: 1
   Loop: 1
   Mute: 0
   Spatialize: 0
@@ -422,9 +422,9 @@ MonoBehaviour:
   PositionSnappingDistance: 2
   DeltaRotation: {x: 0, y: 0, z: 0, w: 0}
   DeltaLength: 0
-  LengthMin: 0.5
-  LengthTarget: 5
-  LengthMax: 15
+  LengthMin: 0.1
+  LengthTarget: 3
+  LengthMax: 9
   EffectName: DistortionBeat
 --- !u!1 &963194225
 GameObject:
@@ -604,7 +604,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 1f635b207467dc343b0483ba57d4d6ef, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
-  m_Pitch: 0.25
+  m_Pitch: 1
   Loop: 1
   Mute: 0
   Spatialize: 0
@@ -706,9 +706,9 @@ MonoBehaviour:
   PositionSnappingDistance: 2
   DeltaRotation: {x: 0, y: 0, z: 0, w: 0}
   DeltaLength: 0
-  LengthMin: 0.5
-  LengthTarget: 5
-  LengthMax: 15
+  LengthMin: 0.1
+  LengthTarget: 3
+  LengthMax: 9
   EffectName: DistortionBass
 --- !u!4 &2132695702
 Transform:
@@ -717,10 +717,10 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2132695696}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
