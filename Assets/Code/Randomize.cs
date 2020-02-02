@@ -26,6 +26,7 @@ public class Randomize : MonoBehaviour
     private float OriginalScaleX;
     private float OriginalScaleZ;
     private float OriginalPositionZ;
+    public bool Done = false;
 
     void Start ()
     {
@@ -69,6 +70,7 @@ public class Randomize : MonoBehaviour
     void Update()
     {
         // Length and pitch
+        bool lenDone = false;
         float sY = Mathf.Clamp(transform.localScale.y, LengthMin, LengthMax);
         if (sY <= LengthSnapEnd && sY >= LengthSnapStart) sY = LengthTarget;
         transform.localScale = new Vector3(OriginalScaleX, sY, OriginalScaleZ);
@@ -76,6 +78,7 @@ public class Randomize : MonoBehaviour
         if (DeltaLength == LengthTarget) {
             SyncAudioSources();
             audioSource.pitch = 1f;
+            lenDone = true;
         } else {
             audioSource.pitch = DeltaLength / 3f;
         }
@@ -88,6 +91,7 @@ public class Randomize : MonoBehaviour
         if (DeltaDistance <= PositionSnappingDistance) transform.position = TargetPosition;
         float distort = Remap(DeltaDistance, 0f, 17.32f, 0f, 2f);
         audioSource.outputAudioMixerGroup.audioMixer.SetFloat(PositionEffectName, distort);
+        bool posDone = transform.position == TargetPosition;
 
         // Rotation and Cutoff
         DeltaToStartRotationZ = StartRotationZ - transform.rotation.eulerAngles.z;
@@ -96,6 +100,10 @@ public class Randomize : MonoBehaviour
         transform.rotation = Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z);
         float cutoff = Remap(deltaAbs, 0f, 360f, 22000f, 0f);
         audioSource.outputAudioMixerGroup.audioMixer.SetFloat(RotationEffectName, cutoff);
+        bool rotDone = deltaAbs == 0f;
+
+        // Are we done?
+        Done = posDone && lenDone && rotDone;
     }
 
     float Remap (float value, float from1, float to1, float from2, float to2) {
