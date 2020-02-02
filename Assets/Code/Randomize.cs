@@ -23,10 +23,14 @@ public class Randomize : MonoBehaviour
     public float StartRotationZ;
     public float DeltaToStartRotationZ;
     public float RotationSnap = 30f;
+    private float OriginalScaleX;
+    private float OriginalScaleZ;
+    private float OriginalPositionZ;
 
     void Start ()
     {
         audioSource = GetComponent<AudioSource>();
+
         // Length and pitch
         if (Random.Range(0f, 1f) >= 0.5f) {
             DeltaLength = Random.Range(LengthMin, LengthSnapStart);
@@ -34,19 +38,21 @@ public class Randomize : MonoBehaviour
         else {
             DeltaLength = Random.Range(LengthSnapEnd, LengthMax);
         }
-
         transform.localScale = new Vector3(transform.localScale.x, DeltaLength, transform.localScale.z);
+        OriginalScaleX = transform.localScale.x;
+        OriginalScaleZ = transform.localScale.z;
+
         // Position and Distortion
         TargetPosition = transform.position;
         DeltaDistance = Vector3.Distance(transform.position, TargetPosition);
         while (DeltaDistance <= PositionSnappingDistance) {
             float x = Random.Range(-MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
             float y = Random.Range(-MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
-            float z = Random.Range(-MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
-            DeltaPosition = new Vector3(x, y, z);
+            DeltaPosition = new Vector3(x, y, transform.position.z);
             transform.position += DeltaPosition;
             DeltaDistance = Vector3.Distance(transform.position, TargetPosition);
         }
+        OriginalPositionZ = transform.position.z;
 
         // Rotation and Cutoff
         StartRotationZ = transform.rotation.eulerAngles.z;
@@ -65,7 +71,7 @@ public class Randomize : MonoBehaviour
         // Length and pitch
         float sY = Mathf.Clamp(transform.localScale.y, LengthMin, LengthMax);
         if (sY <= LengthSnapEnd && sY >= LengthSnapStart) sY = LengthTarget;
-        transform.localScale = new Vector3(transform.localScale.x, sY, transform.localScale.z);
+        transform.localScale = new Vector3(OriginalScaleX, sY, OriginalScaleZ);
         DeltaLength = transform.localScale.y;
         if (DeltaLength == LengthTarget) {
             SyncAudioSources();
@@ -77,8 +83,7 @@ public class Randomize : MonoBehaviour
         // Position and Distortion
         float pX = Mathf.Clamp(transform.position.x, -MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
         float pY = Mathf.Clamp(transform.position.y, -MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
-        float pZ = Mathf.Clamp(transform.position.z, -MaxDistanceToTargetPosition, MaxDistanceToTargetPosition);
-        transform.position = new Vector3(pX, pY, pZ);
+        transform.position = new Vector3(pX, pY, OriginalPositionZ);
         DeltaDistance = Vector3.Distance(transform.position, TargetPosition);
         if (DeltaDistance <= PositionSnappingDistance) transform.position = TargetPosition;
         float distort = Remap(DeltaDistance, 0f, 17.32f, 0f, 2f);
@@ -88,6 +93,7 @@ public class Randomize : MonoBehaviour
         DeltaToStartRotationZ = StartRotationZ - transform.rotation.eulerAngles.z;
         float deltaAbs = Mathf.Abs(DeltaToStartRotationZ);
         if (deltaAbs <= RotationSnap) transform.rotation = Quaternion.Euler(0f, 0f, StartRotationZ);
+        transform.rotation = Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z);
         float cutoff = Remap(deltaAbs, 0f, 360f, 22000f, 0f);
         audioSource.outputAudioMixerGroup.audioMixer.SetFloat(RotationEffectName, cutoff);
     }
