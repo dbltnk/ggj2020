@@ -1,7 +1,6 @@
 # Defract
 
-Made for Global Game Jam 2020 
-Theme: Repair
+Made for Global Game Jam 2020. Theme: Repair.
 
 ## How to Play ##
 * Open the Main scene in the Unity project. This was made in 2019.2.19f1 but should work with most Unity versions before or after.
