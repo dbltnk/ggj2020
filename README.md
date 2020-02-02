@@ -12,3 +12,5 @@ A quick Unity prototype for a puzzle game of sorts: Restore the scene to its ori
 GGJ Entry: https://globalgamejam.org/2020/games/defract-6
 
 Music created using https://www.boscaceoil.net/ developed by https://terrycavanaghgames.com/. Thanks Terry!
+
+PS: Yes, this is a pretty horrible cover of Seven Nation Army by The White Stripes. =D
